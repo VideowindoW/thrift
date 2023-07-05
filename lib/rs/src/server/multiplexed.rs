@@ -137,7 +137,7 @@ impl TMultiplexedProcessor {
 
 impl TProcessor for TMultiplexedProcessor {
     fn process(
-        &self,
+        &mut self,
         i_prot: &mut dyn TInputProtocol,
         o_prot: &mut dyn TOutputProtocol,
     ) -> crate::Result<()> {

@@ -2529,7 +2529,7 @@ void t_rs_generator::render_sync_handler_trait(t_service *tservice) {
   for(func_iter = functions.begin(); func_iter != functions.end(); ++func_iter) {
     t_function* tfunc = (*func_iter);
     string func_name = service_call_handler_function_name(tfunc);
-    string func_args = rust_sync_service_call_declaration(tfunc, false);
+    string func_args = rust_sync_service_call_declaration(tfunc, true);
     string func_return = to_rust_type(tfunc->get_returntype());
     render_rustdoc((t_doc*) tfunc);
     f_gen_
@@ -2556,7 +2556,7 @@ void t_rs_generator::render_sync_processor_definition_and_impl(t_service *tservi
     << "> {"
     << endl;
   indent_up();
-  f_gen_ << indent() << "handler: H," << endl;
+  f_gen_ << indent() << "pub handler: H," << endl;
   indent_down();
   f_gen_ << indent() << "}" << endl;
   f_gen_ << endl;
@@ -2613,7 +2613,7 @@ void t_rs_generator::render_sync_processor_definition_and_impl(t_service *tservi
 
   f_gen_
     << indent()
-    << "fn process(&self, i_prot: &mut dyn TInputProtocol, o_prot: &mut dyn TOutputProtocol) -> thrift::Result<()> {"
+    << "fn process(&mut self, i_prot: &mut dyn TInputProtocol, o_prot: &mut dyn TOutputProtocol) -> thrift::Result<()> {"
     << endl;
   indent_up();
 
@@ -2656,7 +2656,7 @@ void t_rs_generator::render_sync_process_delegation_functions(t_service *tservic
     f_gen_
       << indent()
       << "fn " << function_name
-      << "(&self, "
+      << "(&mut self, "
       << "incoming_sequence_number: i32, "
       << "i_prot: &mut dyn TInputProtocol, "
       << "o_prot: &mut dyn TOutputProtocol) "
@@ -2669,7 +2669,7 @@ void t_rs_generator::render_sync_process_delegation_functions(t_service *tservic
       << actual_processor
       << "::" << function_name
       << "("
-      << "&self.handler, "
+      << "&mut self.handler, "
       << "incoming_sequence_number, "
       << "i_prot, "
       << "o_prot"
@@ -2721,7 +2721,7 @@ void t_rs_generator::render_sync_process_function(t_function *tfunc, const strin
     << indent()
     << "pub fn process_" << rust_snake_case(tfunc->get_name())
     << "<H: " << handler_type << ">"
-    << "(handler: &H, "
+    << "(handler: &mut H, "
     << sequence_number_param << ": i32, "
     << "i_prot: &mut dyn TInputProtocol, "
     << output_protocol_param << ": &mut dyn TOutputProtocol) "

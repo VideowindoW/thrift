@@ -20,11 +20,11 @@
 use crate::protocol::{TInputProtocol, TMessageIdentifier, TMessageType, TOutputProtocol};
 use crate::{ApplicationError, ApplicationErrorKind};
 
-mod multiplexed;
-mod threaded;
+// mod multiplexed;
+// mod threaded;
 
-pub use self::multiplexed::TMultiplexedProcessor;
-pub use self::threaded::TServer;
+//pub use self::multiplexed::TMultiplexedProcessor;
+//pub use self::threaded::TServer;
 
 /// Handles incoming Thrift messages and dispatches them to the user-defined
 /// handler functions.
@@ -91,8 +91,11 @@ pub trait TProcessor {
     /// the response to `o`.
     ///
     /// Returns `()` if the handler was executed; `Err` otherwise.
-    fn process(&self, i: &mut dyn TInputProtocol, o: &mut dyn TOutputProtocol)
-        -> crate::Result<()>;
+    fn process(
+        &mut self,
+        i: &mut dyn TInputProtocol,
+        o: &mut dyn TOutputProtocol,
+    ) -> crate::Result<()>;
 }
 
 /// Convenience function used in generated `TProcessor` implementations to
